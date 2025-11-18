@@ -22,34 +22,35 @@ The project uses the **RSNA-MICCAI Brain Tumor Radiogenomic Classification** dat
 
 ---
 
-## 🧩 Models Implemented
+# 🧩 Segmentation Methods
 
-Based on the categories defined in Shu et al.’s survey, the following models are implemented using **scikit-image**:
+### **1. Geodesic Active Contour (GAC) – Edge-Based**
+- Evolves contour toward strong image gradients.  
+- Works well for well-defined boundaries.  
+- Parameters: `num_iter=400`, `balloon=-1`, `threshold=0.3`.
 
-### 1. Edge-Based Model
-#### **Geodesic Active Contour (GAC)**
-- Finds object boundaries by evolving a contour toward strong edges (image gradients).  
-- Sensitive to the initial contour placement and image contrast.  
-- Works best on images with clear, well-defined edges.
+### **2. Random Walker – Graph-Based**
+- Probabilistic segmentation using foreground & background seeds.  
+- Uses: `beta=1000`, intelligent marker placement.  
+- Good for complex shapes and noisy regions.
 
----
+### **3. Chan–Vese (CV) – Region-Based**
+- Based on global intensity statistics.  
+- Does not rely on edges; performs well on blurred MRI boundaries.  
+- Parameters: `num_iter=300`, `lambda1=lambda2=200`.
 
-### 2. Region-Based Models
-#### **Chan–Vese (CV)**
-- Divides the image into two regions with different average intensities.  
-- Uses global image information and can handle weak or blurred edges.
+### **4. Region-Scalable Fitting (RSF) – Local Region-Based**
+- Handles intensity inhomogeneity using local fitting energies.  
+- Good for MRI with nonuniform illumination.  
+- Parameters include: `sigma=3`, `lambda1=lambda2=200`.
+
+### **5. Hybrid Model – Intensity + Edge Fusion**
+- Combines MRI intensity with Sobel gradient:  
+  `hybrid = 0.85 * image + 0.15 * gradient`  
+- Segmented using Morphological Chan–Vese.  
+- Strong performance on weak-edge MRI scans.
 
 
----
-
-### 3. Hybrid Model
-#### **Local and Global Intensity Fitting (LGIF) Simulation**
-- Combines **region** and **edge** information.  
-- Creates a “hybrid input” image by merging the original MRI intensities with an edge map.  
-- This forces the algorithm to consider both global intensity variations and local edge details.  
-- Useful for **intensity-inhomogeneous medical images**.
-
----
 
 ## 🚀 Getting Started
 
